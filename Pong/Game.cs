@@ -10,6 +10,9 @@ namespace Pong
         private SpriteBatch _spriteBatch;
 
         Texture2D ballTexture;
+        Vector2 ballPosition;
+        float ballSpeed;
+        //TODO: Добавете нова булева променлива down, която показва дали топката се движи нагоре/надолу
 
         public Game()
         {
@@ -20,7 +23,11 @@ namespace Pong
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
+                                       _graphics.PreferredBackBufferHeight / 2);
+            ballSpeed = 100f;
+
+            //TODO: инициализирайте булевата променлива
 
             base.Initialize();
         }
@@ -28,8 +35,6 @@ namespace Pong
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
             ballTexture = Content.Load<Texture2D>("ball");
         }
 
@@ -38,7 +43,13 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            float updatedBallSpeed = ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //TODO: Изменете ballPosition.Y координатата в зависимост от стойността на булевата променлива down
+
+            //TODO: Ако картинката е напуска границите на екрана, това означава, че топката се е "ударила" в края на екрана и трябва да
+            //промени посоката си на движение. За целта трябва да промените променливата down.
+
 
             base.Update(gameTime);
         }
@@ -47,10 +58,18 @@ namespace Pong
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
             _spriteBatch.Begin();
-            _spriteBatch.Draw(ballTexture, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(
+                ballTexture,
+                ballPosition,
+                null,
+                Color.White,
+                0f,
+                new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
+                Vector2.One,
+                SpriteEffects.None,
+                0f
+            );
             _spriteBatch.End();
 
             base.Draw(gameTime);
